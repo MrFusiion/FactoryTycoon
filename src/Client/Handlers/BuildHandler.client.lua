@@ -1,0 +1,1 @@
+while not _G.Loaded do task.wait() end

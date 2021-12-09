@@ -1,0 +1,51 @@
+{
+	"name": "FactoryTycoon",
+	"tree": {
+		"$className": "DataModel",
+
+		"StarterPlayer": {
+			"$className": "StarterPlayer",
+
+			"StarterPlayerScripts": {
+				"$className": "StarterPlayerScripts",
+				"$path": "src/Client"
+			}
+		},
+
+
+
+		"ServerStorage": {
+			"$className": "ServerStorage"
+		},
+
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
+			"$path": "src/Server"
+		},
+
+		"ReplicatedFirst": {
+			"$className": "ReplicatedFirst",
+			"$path": "src/First"
+		},
+
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+
+			"Modules": {
+				"$path": "src/Shared/Modules"
+			},
+
+			"Classes": {
+				"$path": "src/Shared/Classes"
+			},
+
+			"_G": {
+				"$path": "src/Shared/_G"
+			},
+
+			"Command": {
+				"$path": "src/Shared/Command"
+			}
+		}
+	}
+}

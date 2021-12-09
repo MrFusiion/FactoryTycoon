@@ -1,0 +1,87 @@
+while not _G.Loaded do wait() end
+
+local rePropertySet = _G.Remotes("Property", "PropertySet")
+local Property = _G.getObject("Property")
+
+
+local RS = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local TS = game:GetService("TweenService")
+
+
+local x = 0
+local phi = CFrame.new()
+local theta = CFrame.Angles(-math.pi * .166, 0, 0)
+local position = Vector3.new()
+local zoom = 0
+local STEP = 5
+local ZOOM_RANGE = NumberRange.new(0, 30)
+
+
+local function clamp(value, range)
+    return math.max(range.Min, math.min(range.Max, value))
+end
+
+
+local nVec = {
+	[Enum.KeyCode.A] = Vector3.new(-1, 0, 0),
+	[Enum.KeyCode.D] = Vector3.new(1, 0, 0),
+	[Enum.KeyCode.S] = Vector3.new(0, 0, 1),
+	[Enum.KeyCode.W] = Vector3.new(0, 0, -1),
+	[Enum.KeyCode.Q] = Vector3.new(0, -1, 0),
+	[Enum.KeyCode.E] = Vector3.new(0, 1, 0)
+}
+
+local Vec = {}
+
+local speed = 1.5
+
+local camera = workspace.CurrentCamera
+local function DefaultCam(dt)
+	local move = Vector3.new()
+	for _, v in pairs(Vec) do
+		move += v
+	end
+
+    local angle = phi * theta
+	position += phi * (move * speed)
+
+	TS:Create(camera, TweenInfo.new(.1), {
+        CFrame = angle * CFrame.new(0, 0, zoom) + position
+    }):Play()
+end
+	--[[
+		UIS.InputBegan:Connect(function(input)
+			if nVec[input.KeyCode] then
+				Vec[input.KeyCode] = nVec[input.KeyCode]
+			elseif input.UserInputType == Enum.UserInputType.MouseButton2 then
+				UIS.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
+			elseif input.KeyCode == Enum.KeyCode.LeftShift then
+				speed = 0.1
+			end
+		end)
+
+		UIS.InputChanged:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseMovement and UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) then
+				UIS.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
+				x = (x - math.rad(input.Delta.X))%(2*math.pi)
+				phi = CFrame.Angles(0, x, 0)
+			elseif input.UserInputType == Enum.UserInputType.MouseWheel then
+				print(clamp(STEP * math.sign(input.Position.Z), ZOOM_RANGE))
+				zoom = clamp(zoom + STEP * -math.sign(input.Position.Z), ZOOM_RANGE)
+			end
+		end)
+
+		UIS.InputEnded:Connect(function(input)
+			if nVec[input.KeyCode] then
+				Vec[input.KeyCode] = nil
+			elseif input.UserInputType == Enum.UserInputType.MouseButton2 then
+				UIS.MouseBehavior = Enum.MouseBehavior.Default
+			elseif input.KeyCode == Enum.KeyCode.LeftShift then
+				speed = 1.5
+			end
+		end)
+	]]
+
+	--camera.CameraType = Enum.CameraType.Scriptable
+	--RS:BindToRenderStep("DefaultCam", Enum.RenderPriority.Camera.Value, DefaultCam)

@@ -1,0 +1,1 @@
+local backpack = require(game:GetService("StarterPlayer").StarterPlayerScripts.Tools.Backpack).new(script.Parent)
