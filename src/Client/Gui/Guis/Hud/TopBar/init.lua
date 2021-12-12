@@ -6,15 +6,17 @@ local TopBar = { Priority = 1 }
 
 function TopBar:init(frame: Frame, manager)
     self.Frame = frame
+
+
+    --<< Initial State >>
     self.Frame.Position = UDim2.fromScale(0, -1)
     self.Frame.Visible = true
-
     self.Visible = false
 
     self.Cash = require(script.Cash):init(frame.Cash)
 
-    manager:subscribe("Slots.SetVisible", function(visible)
-        if not visible then
+    manager.State:connect(function(State)
+        if State:contains("Slot") and not State:contains("Loading") then
             self:fadein()
         else
             self:fadeout()

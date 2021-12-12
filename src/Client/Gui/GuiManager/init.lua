@@ -2,7 +2,8 @@
 local TIMEOUT = 5
 local GuiManager = {
     Groups = {},
-    Signals = {}
+    Signals = {},
+    State = require(script.State)
 }
 
 local Group = require(script.Group)

@@ -5,8 +5,6 @@ local Backpack = _G.Client.Backpack
 local Button = _G.Gui.Elements.Button
 local Loading = _G.Gui.Elements.Loading
 
-local Loaded = false
-
 local function spawn(func: () -> (), ...)
     local event = Instance.new("BindableEvent")
     event.Event:Connect(func)
@@ -17,97 +15,152 @@ end
 local MainMenu = { Priority = 9999 }
 
 function MainMenu:init(frame: Frame, manager)
-    if not _G.Config.LOADING_ENABLED then
-        task.wait()
-        frame.Visible = false
-        manager:dispatch("Slots.SetVisible", true)
-        return
-    end
 
-    if Loaded then
-        manager:dispatch("Slots.SetVisible", false)
-        return
-    end
+    local background = frame.Background
+    local pattern = frame.Pattern
+    local bottom = background.Bottom
+    local top = background.Top
 
-    game:GetService("StarterGui"):SetCore("ResetButtonCallback", false)
-
-    frame.Visible = true
-    frame.Sound:Play()
-    Backpack:hide()
-
-    self.Background = frame.Background
-    self.Pattern = frame.Pattern
-    self.Bottom = self.Background.Bottom
-    self.Top = self.Background.Top
-
-    self.PlayButton = Button.new(frame.PlayButton)
-    self.PlayButton.AnchorPoint = Vector2.new(0.5, 0)
-    self.PlayButton.Position = UDim2.fromScale(0.5, 1)
+    local playButton = Button.new(frame.PlayButton)
+    playButton.AnchorPoint = Vector2.new(0.5, 0)
+    playButton.Position = UDim2.fromScale(0.5, 1)
 
     self.Loading = Loading.new{
         Parent = frame.LoadingContainer,
         Speed = 0.75
     }
+
+    local logo = frame.LogoContainer.Logo
+
+    task.desynchronize()
+
+    self.Tweens = {
+        --<< Pattern >>
+        PatternAnim = TS:Create(pattern, TweenInfo.new(3, Enum.EasingStyle.Linear), {
+            Position=UDim2.fromOffset(0, 0)
+        }),
+
+        PatternFadeOut = TS:Create(pattern, TweenInfo.new(0.5), {
+            ImageTransparency=1
+        }),
+
+
+        --<< Background >>
+        TopOpen = TS:Create(top, TweenInfo.new(0.5), {
+            Position=UDim2.fromScale(0.5, -0.05)
+        }),
+
+        BottomOpen = TS:Create(bottom, TweenInfo.new(0.5), {
+            Position=UDim2.fromScale(0.5,  1.05)
+        }),
+
+        TopMove = TS:Create(top, TweenInfo.new(  1), {
+            Position=UDim2.fromScale(0.5, -1)
+        }),
+
+        BottomMove = TS:Create(bottom, TweenInfo.new(  1), { Position=UDim2.fromScale(0.5,  2)
+        }),
+
+        BackgroundRotate = TS:Create(background, TweenInfo.new(0.5), {
+            Rotation=45
+        }),
+
+
+        --<< Button >>
+        PlayButtonFadeIn = TS:Create(playButton,  TweenInfo.new(0.5), {
+            AnchorPoint=Vector2.new(0.5, 1),
+            Position=UDim2.fromScale(0.5, 0.95)
+        }),
+
+        PlayButtonFadeOut = TS:Create(playButton,  TweenInfo.new(0.5), {
+            AnchorPoint=Vector2.new(0.5, 0),
+            Position=UDim2.fromScale(0.5, 1)
+        }),
+
+
+        --<< Logo >>
+        LogoGrow = TS:Create(logo, TweenInfo.new(   1), {
+            Size=UDim2.fromScale(1.3, 1.3)
+        }),
+        LogoShrink = TS:Create(logo, TweenInfo.new(0.25), {
+            Size=UDim2.fromScale(  0,   0)
+        })
+    }
+
+    --<< Pattern Loop Connection >>
+    self.PatternConn = self.Tweens.PatternAnim.Completed:Connect(function()
+        pattern.Position = UDim2.fromOffset(-200, -200)
+        self.Tweens.PatternAnim:Play()
+    end)
+
+    --<< Play Button >>
+    local btnConn
+    btnConn = playButton.Activated:Connect(function()
+        btnConn:Disconnect()
+
+        self:hide()
+        manager.State:remove("Loading")
+    end)
+
+    --<< State Manager >>
+    manager.State:connect(function(State)
+        if State:contains("Loading") then
+            frame.Visible = true
+            self:play()
+        else
+            frame.Visible = false
+        end
+    end)
+end
+
+function MainMenu:play()
+    game:GetService("StarterGui"):SetCore("ResetButtonCallback", false)
+    Backpack:hide()
+
+    --<< Loading Icon >>
     self.Loading:show()
 
-    self.Logo = frame.LogoContainer.Logo
-
-    local pattermTw = TS:Create(self.Pattern, TweenInfo.new(3, Enum.EasingStyle.Linear), { Position=UDim2.fromOffset(0, 0) })
-    self.PatternConn = pattermTw.Completed:Connect(function()
-        self.Pattern.Position = UDim2.fromOffset(-200, -200)
-        pattermTw:Play()
-    end)
-    pattermTw:Play()
+    --<< Background Pattern Animation >>
+    self.Tweens.PatternAnim:Play()
 
     if not game:IsLoaded() then
         game.Loaded:Wait()
     end
     self.Loading:hide()
 
-    TS:Create(self.PlayButton,  TweenInfo.new(0.5), {
-        AnchorPoint=Vector2.new(0.5, 1),
-        Position=UDim2.fromScale(0.5, 0.95)
-    }):Play()
-
-    self.PlayButton.Activated:Connect(function()
-        self:hide()
-        task.wait(1)
-        Loaded = true
-        game:GetService("StarterGui"):SetCore("ResetButtonCallback", true)
-        manager:dispatch("Slots.SetVisible", true)
-    end)
+    self.Tweens.PlayButtonFadeIn:Play()
 end
 
 function MainMenu:hide()
-
-    TS:Create(self.Pattern,     TweenInfo.new(0.5), {
-        ImageTransparency=1
-    }):Play()
-
-    TS:Create(self.PlayButton,  TweenInfo.new(0.5), {
-        AnchorPoint=Vector2.new(0.5, 0),
-        Position=UDim2.fromScale(0.5, 1)
-    }):Play()
-
     spawn(function()
-        TS:Create(self.Top,         TweenInfo.new(0.5), { Position=UDim2.fromScale(0.5, -0.05) }):Play()
-        TS:Create(self.Bottom,      TweenInfo.new(0.5), { Position=UDim2.fromScale(0.5,  1.05) }):Play()
+        self.Tweens.PatternFadeOut:Play()
+        self.Tweens.PlayButtonFadeOut:Play()
+
+        self.Tweens.TopOpen:Play()
+        self.Tweens.BottomOpen:Play()
         task.wait(0.5)
-        TS:Create(self.Background,  TweenInfo.new(0.5), { Rotation=45 }):Play()
+
+        self.Tweens.BackgroundRotate:Play()
         task.wait(0.5)
-        TS:Create(self.Top,         TweenInfo.new(  1), { Position=UDim2.fromScale(0.5, -1) }):Play()
-        TS:Create(self.Bottom,      TweenInfo.new(  1), { Position=UDim2.fromScale(0.5,  2) }):Play()
+
+        self.Tweens.TopMove:Play()
+        self.Tweens.BottomMove:Play()
     end)
 
     spawn(function()
-        TS:Create(self.Logo, TweenInfo.new(   1), { Size=UDim2.fromScale(1.3, 1.3) }):Play()
+        self.Tweens.LogoGrow:Play()
         task.wait(1)
-        TS:Create(self.Logo, TweenInfo.new(0.25), { Size=UDim2.fromScale(  0,   0) }):Play()
+        self.Tweens.LogoShrink:Play()
     end)
+
+    task.wait(2)
 
     if self.PatternConn then
         self.PatternConn:Disconnect()
     end
+
+    game:GetService("StarterGui"):SetCore("ResetButtonCallback", true)
+    Backpack:show()
 end
 
 return MainMenu

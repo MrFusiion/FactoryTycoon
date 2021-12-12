@@ -1,5 +1,8 @@
 while not _G.Loaded do task.wait() end
 
+--Wait one thread for the StateManager to initialize
+task.wait()
+
 local Theme = _G.Data.Theme.Value
 
 local player = game:GetService("Players").LocalPlayer
