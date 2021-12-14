@@ -1,4 +1,5 @@
 local TS = game:GetService("TweenService")
+local SG = game:GetService("StarterGui")
 
 local Backpack = _G.Client.Backpack
 
@@ -10,6 +11,22 @@ local function spawn(func: () -> (), ...)
     event.Event:Connect(func)
     event:Fire(...)
     event:Destroy()
+end
+
+local function setCore(name: string, value: any)
+    while true do
+        local suc, err = pcall(function()
+            SG:SetCore(name, value)
+        end)
+
+        if suc then
+            break
+        else
+            warn(err)
+        end
+
+        task.wait()
+    end
 end
 
 local MainMenu = { Priority = 9999 }
@@ -114,7 +131,7 @@ function MainMenu:init(frame: Frame, manager)
 end
 
 function MainMenu:play()
-    game:GetService("StarterGui"):SetCore("ResetButtonCallback", false)
+    setCore("ResetButtonCallback", false)
     Backpack:hide()
 
     --<< Loading Icon >>
@@ -159,7 +176,7 @@ function MainMenu:hide()
         self.PatternConn:Disconnect()
     end
 
-    game:GetService("StarterGui"):SetCore("ResetButtonCallback", true)
+    setCore("ResetButtonCallback", true)
     Backpack:show()
 end
 
