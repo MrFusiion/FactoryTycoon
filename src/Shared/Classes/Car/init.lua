@@ -139,22 +139,6 @@ function Car.new(model: Model)
 
     --<< Driveseat connection >>
     if IS_SERVER then
-        self.Driver = NIL
-        self.DriveSeat:GetPropertyChangedSignal("Occupant"):Connect(function()
-            if self.Driver == NIL then
-                local hum = self.DriveSeat.Occupant
-                self.Driver = hum and Players:GetPlayerFromCharacter(hum.Parent) or NIL
-
-                if self.Driver ~= NIL then
-                    local drive = script.Drive:Clone()
-                    drive.CarRef.Value = self.Model
-                    drive.Parent = self.Driver.PlayerGui
-                end
-            elseif not self.DriveSeat.Occupant then
-                self.Driver = NIL
-            end
-        end)
-
         self.Model.Destroying:Connect(function()
             cache[self.Model] = nil
         end)
