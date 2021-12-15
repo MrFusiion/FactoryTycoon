@@ -3,11 +3,17 @@ local Players = game:GetService("Players")
 
 local signals = {}
 local function createSignals(self)
+    local function signal(name: string)
+        local event = Instance.new("BindableEvent")
+        self[name] = event.Event
+        return event
+    end
+
     signals[self] = {
-        Entered       = Instance.new("BindableEvent"),
-        Left          = Instance.new("BindableEvent"),
-        PlayerEntered = Instance.new("BindableEvent"),
-        PlayerLeft    = Instance.new("BindableEvent")
+        Entered       = signal("Entered"),
+        Left          = signal("Left"),
+        PlayerEntered = signal("PlayerEntered"),
+        PlayerLeft    = signal("PlayerLeft")
     }
 end
 local function fireSignal(self, name: string, ...)
@@ -26,18 +32,28 @@ end
 local Trigger = {}
 local Trigger_mt = {}
 
-Trigger.Types = { PLAYERS="players", PARTS="parts" }
+Trigger.Types = { PLAYERS="players", PARTS="parts", BOTH="both" }
 
-function Trigger.new(parts: {BasePart}, tags: {string}?)
+function Trigger.new(parts: (BasePart|{BasePart}), type: string?, tags: {string}?)
+    parts = typeof(parts) ~= "table" and {parts} or parts
+    type = type or "both"
+
+    assert(Trigger.Types[type:upper()], ("%s is not a valid Trigger type!"):format(tostring(type)))
 
     local self = {}
-    self.Type = type or "parts"
+    self.Type = type
+    self.Parts = {}
 
     createSignals(self)
 
     for _, part in ipairs(parts) do
+        part.CanTouch = true
+        part.CanCollide = false
+
+        table.insert(self.Parts, part)
+
         part.Touched:Connect(function(otherPart)
-            if type == "parts" then
+            if type == "both" or type == "parts" then
                 if tags then
                     for _, tag in ipairs(tags) do
                         if CS:HasTag(otherPart, tag) then
@@ -50,13 +66,13 @@ function Trigger.new(parts: {BasePart}, tags: {string}?)
                 end
             end
 
-            if type == "players" and isPlayer(otherPart) then
-                fireSignal(self, "PlayerEntered", otherPart)
+            if (type == "both" or type == "players") and isPlayer(otherPart) then
+                fireSignal(self, "PlayerEntered", Players:GetPlayerFromCharacter(otherPart.Parent))
             end
         end)
 
         part.TouchEnded:Connect(function(otherPart)
-            if type == "parts" then
+            if type == "both" or type == "parts" then
                 if tags then
                     for _, tag in ipairs(tags) do
                         if CS:HasTag(otherPart, tag) then
@@ -69,20 +85,13 @@ function Trigger.new(parts: {BasePart}, tags: {string}?)
                 end
             end
 
-            if type == "players" and isPlayer(otherPart) then
-                fireSignal(self, "PlayerLeft", otherPart)
+            if (type == "both" or type == "players") and isPlayer(otherPart) then
+                fireSignal(self, "PlayerLeft", Players:GetPlayerFromCharacter(otherPart.Parent))
             end
         end)
     end
 
     return setmetatable(self, Trigger_mt)
-end
-
-function Trigger:allowed(part: BasePart)
-    if self.Type == "parts" then
-
-    elseif self.Type == "players" and isPlayer() then
-    end
 end
 
 return Trigger
