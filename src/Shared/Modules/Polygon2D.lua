@@ -26,6 +26,9 @@ function Polygon.new(points: {Vector2})
     return setmetatable(self, Polygon_mt)
 end
 
+-- Check's if a given point is inside the polygon by ray-casting to the right and counting the hits
+-- Even hits means out
+-- Uneven hits means in
 function Polygon:pointInPolygon(x: number, y: number)
     local c = Vector2.new(x, y)
     local d = self.Bounds.Max
