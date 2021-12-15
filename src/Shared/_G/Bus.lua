@@ -4,12 +4,12 @@ local events = {}
 
 local Bus = {}
 
-function Bus:subscribe(name: string, callback: ()->())
+function Bus:listen(name: string, callback: ()->())
     events[name] = events[name] or Instance.new("BindableEvent")
     return events[name].Event:Connect(callback)
 end
 
-function Bus:dispatch(name: string, ...)
+function Bus:send(name: string, ...)
     if events[name] then
         events[name]:Fire(...)
     end
