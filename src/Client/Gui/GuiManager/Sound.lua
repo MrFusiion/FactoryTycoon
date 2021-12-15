@@ -25,6 +25,7 @@ function Sound:play()
         sound:Destroy()
     end)
     sound.Parent = playerGui
+    sound:Play()
     return sound
 end
 
