@@ -16,7 +16,7 @@ _G.Config = require(script.Config)
 _G.Remotes = require(_GModules:WaitForChild("Remotes"))
 
 --+++ Local Events and Functions +++
-_G.Remotes = require(_GModules:WaitForChild("Bus"))
+_G.Bus = require(_GModules:WaitForChild("Bus"))
 
 --+++ Packages +++
 _G.Packages = require(_GModules:WaitForChild("Packages"))
