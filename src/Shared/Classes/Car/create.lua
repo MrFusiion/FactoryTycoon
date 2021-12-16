@@ -1,8 +1,8 @@
+local ServerStorage = game:GetService("ServerStorage")
 while not _G.Loaded do task.wait() end
 
 local WEIGHT_SCALING = 1/50
 local DEBUG = _G.Config.CAR_DEBUG
-local SPHERE = script.Parent.Sphere
 
 
 local function weld(a: BasePart, b: BasePart, parent: Instance?)
@@ -520,11 +520,34 @@ return function(model: Model, tune: table)
 
 	--[[Remove Character Weight]]
 	for _, seat in ipairs(getSeats(model)) do
-		--Sit and Leave Handler
+		seat.Seat:SetAttribute("IsCarSeat", true)
+
+		-- Prompt
+		local prompt: ProximityPrompt = seat.Seat:FindFirstChildWhichIsA("ProximityPrompt", true)
+		if prompt then
+			prompt.Triggered:Connect(function(player: Player)
+				if not seat.Seat.Occupant then
+					local char = player.Character
+					local hum = char and char:FindFirstChild("Humanoid")
+					if hum and not hum.SeatPart then
+						seat.Seat:Sit(hum)
+					end
+				end
+			end)
+		end
+
+		seat.Seat.CanCollide = false
+		seat.Seat.CanTouch = false
+
+		-- Sit and Leave Handler
 		seat.Seat:GetPropertyChangedSignal("Occupant"):Connect(function()
 			local hum = seat.Seat.Occupant
 
-			--Player sitted
+			if prompt then
+				prompt.Enabled = hum == nil
+			end
+
+			-- Player sitted
 			if hum then
 				seat.Parts = {}
 
@@ -544,7 +567,7 @@ return function(model: Model, tune: table)
 					end
 				end
 
-				--Driver seat
+				-- Driver seat
 				if seat.Seat:IsA("VehicleSeat") then
 					local player = game.Players:GetPlayerFromCharacter(hum.Parent)
 					if player then
@@ -559,7 +582,7 @@ return function(model: Model, tune: table)
 									* tune.SeatCFAngle
 				end
 
-			--Player left
+			-- Player left
 			else
 				for _, v in ipairs(seat.Parts) do
 					if v.Part then
@@ -569,16 +592,16 @@ return function(model: Model, tune: table)
 				end
 				seat.Parts = {}
 
-				--Driver seat
+				-- Driver seat
 				if seat.Seat:IsA("VehicleSeat") then
 
-					--Remove Flip Force
+					-- Remove Flip Force
 					local flip = seat.Seat:FindFirstChild("#FLIP")
 					if flip then
 						flip.MaxTorque = Vector3.new()
 					end
 
-					--Remove Wheel Force
+					-- Remove Wheel Force
 					for _, wheel in ipairs(model.Wheels:GetChildren()) do
 						local av = wheel:FindFirstChild("#AV")
 						if av then

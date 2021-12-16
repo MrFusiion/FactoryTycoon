@@ -1,3 +1,4 @@
+local UIS = game:GetService("UserInputService")
 local CAS = game:GetService("ContextActionService")
 
 while not _G.Loaded do task.wait() end
@@ -23,8 +24,6 @@ local conns, loop, engineSound = {}, nil, nil
 
 local function drive(car: Model)
     car = Car.new(car)
-
-    enableJump(false)
 
     local throttle = 0
     local steer = 0
@@ -169,8 +168,6 @@ local function drive(car: Model)
                 seatConn:Disconnect()
             end
         end)
-
-        enableJump(true)
     end
 
 
@@ -193,9 +190,30 @@ local function drive(car: Model)
 end
 
 
+local conn
 local hum = script.Parent:WaitForChild("Humanoid")
 hum:GetPropertyChangedSignal("SeatPart"):Connect(function()
-    if hum.SeatPart and hum.SeatPart:IsA("VehicleSeat") then
-        drive(hum.SeatPart.Parent)
+    local seat = hum.SeatPart
+
+    if seat and seat:GetAttribute("IsCarSeat") then
+        conn = UIS.InputBegan:Connect(function(input)
+            if input.KeyCode == Enum.KeyCode.E then
+                hum.Sit = false
+                task.wait()
+                hum.RootPart.CFrame = CFrame.new(seat.ExitPosition.WorldPosition, seat.ExitPosition.WorldPosition + seat.ExitPosition.WorldAxis * 10)
+            end
+        end)
+
+        enableJump(false)
+
+        if hum.SeatPart:IsA("VehicleSeat") then
+            drive(hum.SeatPart.Parent)
+        end
+    else
+        if conn then
+            conn:Disconnect()
+            conn = nil
+        end
+        enableJump(true)
     end
 end)
