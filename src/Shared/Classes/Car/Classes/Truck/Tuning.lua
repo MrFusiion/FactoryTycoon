@@ -113,7 +113,7 @@ do
 	tune.SoundIdleSpeed = 0.5
 	tune.SoundMaxSpeed	= 1.15
 	tune.SoundVolume 	= 1
-	tune.SoundId 		= "rbxassetid://5257534962"
+	tune.SoundId 		= "rbxassetid://529366737"
 	tune.SoundEffects	= {
 		{
 			Type = "EqualizerSoundEffect",

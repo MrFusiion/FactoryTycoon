@@ -113,10 +113,10 @@ do
     tune.SeatCFAngle	= CFrame.Angles(0, 0, 0)			-- Player seatweld angle
 
 --[[Sound]]
-	tune.SoundIdleSpeed = 0.5
-	tune.SoundMaxSpeed	= 1.15
-	tune.SoundVolume 	= 1
-	tune.SoundId 		= "rbxassetid://5257534962"
+	tune.SoundIdleSpeed = 0.6
+	tune.SoundMaxSpeed	= 1
+	tune.SoundVolume 	= 1.25
+	tune.SoundId 		= "rbxassetid://403732012"
 	tune.SoundEffects	= {
 		{
 			Type = "EqualizerSoundEffect",
