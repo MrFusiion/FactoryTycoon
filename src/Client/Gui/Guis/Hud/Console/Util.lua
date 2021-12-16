@@ -1,7 +1,7 @@
 local TextS = game:GetService("TextService")
 
 local function textBounds(text: string, textSize: number, font: Enum.Font, bounds: Vector2)
-    text = string.gsub(string.gsub(text,"<br%s*/>", "\n"), "<[^<>]->", "")
+    text = string.gsub(text, "<[/]*font .+>", "")
     return TextS:GetTextSize(text, textSize, font, bounds)
 end
 
@@ -28,10 +28,6 @@ function Util:aspectRatio(ar: UIAspectRatioConstraint, refLabel: TextLabel, text
 
     local i = math.ceil(size.Y / refLabel.AbsoluteSize.Y)
     ar.AspectRatio = ar.AspectRatio / i
-
-    print("TextSize:", size)
-    print("AbsSize", refLabel.AbsoluteSize)
-    print("I:", i)
 end
 
 return Util
