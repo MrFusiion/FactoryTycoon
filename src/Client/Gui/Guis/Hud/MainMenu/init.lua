@@ -170,7 +170,7 @@ function MainMenu:hide()
         self.Tweens.LogoShrink:Play()
     end)
 
-    task.wait(2)
+    task.wait(1.5)
 
     if self.PatternConn then
         self.PatternConn:Disconnect()
