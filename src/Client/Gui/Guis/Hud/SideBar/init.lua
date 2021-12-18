@@ -11,8 +11,8 @@ function SideBar:init(frame: Frame, manager)
 
     self.Visible = false
 
-    manager:subscribe("Slots.SetVisible", function(visible)
-        if not visible then
+    manager.State:connect(function(State)
+        if State:contains("Slot") and not State:contains("Loading") then
             self:fadein()
         else
             self:fadeout()
