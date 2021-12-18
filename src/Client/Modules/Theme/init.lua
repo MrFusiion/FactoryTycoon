@@ -45,7 +45,13 @@ local function getThemeValues(name: string)
     local values = require(module)
     if values.Base then
         for k, v in pairs(getThemeValues(values.Base)) do
-            values[k] = values[k] or v
+            if not values[k] then
+                values[k] = v
+            else
+                for state, color in pairs(v) do
+                    values[k][state] = values[k][state] or color
+                end
+            end
         end
     end
     values.Base = nil
@@ -73,7 +79,7 @@ function Theme_mt:__call(name: string, modifier: string|nil)
     elseif colors ~= nil then
         return colors
     else
-        warn(("Color %s not found in theme %s!"):format(name, self.Name))
+        warn(("Color %s not found in theme %s!"):format(tostring(name), self.Name))
     end
 
     if modifier == "Image" then

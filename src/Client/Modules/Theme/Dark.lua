@@ -4,7 +4,7 @@ local Values = {}
     Text
 ]]
 Values.Text = {
-    Default =   Color3.new(0.792, 0.792, 0.792),
+    Default =   Color3.new(0.901960, 0.901960, 0.901960),
     Disabled =  Color3.new(.45, .45, .45),
 }
 
@@ -118,20 +118,35 @@ Values.MainButtonText = {
 
 Values.MainButton = {
     Default =   Color3.fromHSV(0, 0, 0.155),
-    Hover =     Color3.fromHSV(0, 0, .2),
-    Pressed =   Color3.fromHSV(0, 0, .1),
-    Disabled =  Color3.fromHSV(0, 0, .08),
+    Hover =     Color3.fromHSV(0, 0, 0.2),
+    Pressed =   Color3.fromHSV(0, 0, 0.1),
+    Disabled =  Color3.fromHSV(0, 0, 0.08),
 }
 
 Values.MainButtonBorder = {
-    Default =   Color3.fromHSV(0, 0, .1),
+    Default =   Color3.fromHSV(0, 0, 0.1),
 }
 
-Values.Button = {
-    Default =   Color3.new(0.14, 0.14, 0.14),
-    Hover =     Color3.new(0.200, 0.200, 0.200),
-    Disabled =  Color3.new(0.09, 0.09, 0.09),
-    Pressed =   Color3.new(0.100, 0.100, 0.100),
+Values.ButtonBackground = {
+    Default =   Color3.fromHSV(0, 0, 0.155),
+    Hover =     Color3.fromHSV(0, 0, 0.1),
+    Pressed =   Color3.fromHSV(0, 0, 0.1),
+    Disabled =  Color3.fromHSV(0, 0, 0.08),
+    Selected =  Color3.fromRGB(121, 190, 255),
+}
+
+Values.ButtonContent = {
+    Default =   Color3.fromHSV(0, 0, 0.155),
+    Hover =     Color3.fromHSV(0, 0, 0.2),
+    Pressed =   Color3.fromHSV(0, 0, 0.1),
+    Disabled =  Color3.fromHSV(0, 0, 0.08),
+}
+
+Values.ButtonBorder = {
+    Default =   Color3.fromHSV(0, 0, 0.1),
+    Hover =     Color3.fromHSV(0, 0, 0.075),
+    Pressed =   Color3.fromHSV(0, 0, 0.075),
+    Selected =  Color3.fromRGB(85, 138, 187),
 }
 
 

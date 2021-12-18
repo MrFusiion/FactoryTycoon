@@ -34,7 +34,7 @@ _G.Client = require(game:GetService("StarterPlayer").StarterPlayerScripts.Module
 _G.Data = require(script.Parent:WaitForChild("Data"))
 
 --+++ Gui +++
-_G.Gui = { Elements = {} }
+_G.Gui = { Elements = {}, Manager = require(script.Parent.Gui.GuiManager) }
 for _, element in ipairs(player.PlayerScripts:WaitForChild("Gui").Elements:GetChildren()) do
     _G.Gui.Elements[element.Name] = require(element)
 end
