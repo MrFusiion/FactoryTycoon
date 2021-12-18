@@ -22,6 +22,9 @@ manager:configureGroup("Hud", {
 })
 
 
+game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
+
+
 --local modules = {}
 for _, folder in ipairs(script.Guis:GetChildren()) do
     local screenGui = playerGui:WaitForChild(folder.Name)
