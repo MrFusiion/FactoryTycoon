@@ -17,11 +17,14 @@ local Button = {}
 
 function Button.new(button: (TextButton|ImageButton))
 
-    local background = button.Background
-    local content = button.Content
-    local shadow = button.Shadow
+    local container = button:FindFirstChild("Container") or button
 
-    local wave = button:FindFirstChild("Wave")
+    local background = container.Background
+    local content = container.Content
+    local shadow = container.Shadow
+
+    local wave = container:FindFirstChild("Wave")
+
 
     local hover = Instance.new("Sound")
     hover.SoundId = "rbxassetid://421058925"
@@ -31,19 +34,10 @@ function Button.new(button: (TextButton|ImageButton))
     click.SoundId = "rbxassetid://452267918"
     click.Parent = button
 
+
     local contentColorValue = content:GetAttribute("BackgroundColor3")
     local backgroundColorValue = background:GetAttribute("BackgroundColor3")
     local shadowColorValue = shadow:GetAttribute("BackgroundColor3")
-    --self.Shadow = button:FindFirstChild("Shadow")
-
-    --self.ContentPadding = button.Content:FindFirstChildWhichIsA("UIPadding")
-    --self.ContentLayout = button.Content:FindFirstChildWhichIsA("Layout")
-    --local label = button.Content:FindFirstChild("Label")
-    --self.Icon = button.Content:FindFirstChild("Icon")
-
-    --[[if label then
-        Text:autoResize(label, Text.Directions.X)
-    end]]
 
     local hovering = false
     if backgroundColorValue and contentColorValue and shadowColorValue then
