@@ -1,3 +1,5 @@
+local Theme = _G.Data.Theme.Value
+
 local Slot = {}
 Slot.TEMPLATE = nil
 
@@ -29,6 +31,8 @@ function Slot.new(props: table)
             -- Todo add delete functionality
         end)
     end
+
+    Theme:setColor(frame, true)
 end
 
 return Slot
