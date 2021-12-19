@@ -17,7 +17,7 @@ Values.ButtonBackground = {
 }
 
 Values.ButtonBorder = {
-    Selected =  Color3.fromRGB(255, 0, 119),
+    Selected =  Color3.fromRGB(201, 0, 94),
 }
 
 return Values

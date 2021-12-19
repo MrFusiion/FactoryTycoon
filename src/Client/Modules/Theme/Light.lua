@@ -75,7 +75,7 @@ Values.SideBarSettingsStroke = {
 }
 
 Values.SideBarKeyBind = {
-    Default =  Color3.fromHSV(0, 0,  0.290),
+    Default =  Color3.fromHSV(0, 0, 0.784),
 }
 
 
