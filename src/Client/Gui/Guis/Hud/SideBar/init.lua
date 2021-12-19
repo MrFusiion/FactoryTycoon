@@ -11,8 +11,8 @@ function SideBar:init(frame: Frame, manager)
 
     self.Visible = false
 
-    manager.State:connect(function(State)
-        if State:contains("Slot") and not State:contains("Loading") then
+    manager.State:connect(function(state)
+        if state:contains("Slot") and not state:contains("Loading") and not state:contains("Mechanic") then
             self:fadein()
         else
             self:fadeout()
@@ -33,14 +33,14 @@ end
 
 function SideBar:fadein()
     if not self.Visible then
-        TS:Create(self.Frame,   TweenInfo.new(0.5), { Position=UDim2.new(UDim.new(0.004), self.Frame.Position.Y) }):Play()
+        TS:Create(self.Frame,   TweenInfo.new(0.25), { Position=UDim2.new(UDim.new(0.004), self.Frame.Position.Y) }):Play()
         self.Visible = true
     end
 end
 
 function SideBar:fadeout()
     if self.Visible then
-        TS:Create(self.Frame,   TweenInfo.new(0.5), { Position=UDim2.new(UDim.new(-1, 0), self.Frame.Position.Y) }):Play()
+        TS:Create(self.Frame,   TweenInfo.new(0.25), { Position=UDim2.new(UDim.new(-1, 0), self.Frame.Position.Y) }):Play()
         self.Visible = false
     end
 end

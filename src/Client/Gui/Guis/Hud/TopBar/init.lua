@@ -26,14 +26,14 @@ end
 
 function TopBar:fadein()
     if not self.Visible then
-        TS:Create(self.Frame, TweenInfo.new(0.5), { Position=UDim2.fromScale(0, 0.005) }):Play()
+        TS:Create(self.Frame, TweenInfo.new(0.25), { Position=UDim2.fromScale(0, 0.005) }):Play()
         self.Visible = true
     end
 end
 
 function TopBar:fadeout()
     if self.Visible then
-        TS:Create(self.Frame, TweenInfo.new(0.5), { Position=UDim2.fromScale(0, -1) }):Play()
+        TS:Create(self.Frame, TweenInfo.new(0.25), { Position=UDim2.fromScale(0, -1) }):Play()
         self.Visible = false
     end
 end
