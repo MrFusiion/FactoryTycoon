@@ -49,8 +49,6 @@ function MainMenu:init(frame: Frame, manager)
 
     local logo = frame.LogoContainer.Logo
 
-    task.desynchronize()
-
     self.Tweens = {
         --<< Pattern >>
         PatternAnim = TS:Create(pattern, TweenInfo.new(3, Enum.EasingStyle.Linear), {
